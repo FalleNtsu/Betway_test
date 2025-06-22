@@ -1,4 +1,13 @@
 --Tables
+CREATE TABLE dbo.access
+(
+    APIKey uniqueidentifier NOT NULL PRIMARY KEY,
+    Password varchar(30) NOT NULL
+);
+
+INSERT INTO dbo.access (APIKey, Password)
+VALUES ('586214D2-4CBB-4914-99FC-7B27EDFBC8FA', 'OT_Assessment_Password');
+
 CREATE TABLE users (
                 accountId UNIQUEIDENTIFIER PRIMARY KEY,
                 username NVARCHAR(100) NOT NULL,
@@ -10,7 +19,8 @@ CREATE TABLE users (
 
 
 CREATE TABLE wagers (
-    wagerId UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    wagerId UNIQUEIDENTIFIER NOT NULL,
     game NVARCHAR(100) NOT NULL,
     provider NVARCHAR(100) NOT NULL,
     amount DECIMAL(18, 2) NOT NULL,
@@ -22,7 +32,9 @@ CREATE TABLE wagers (
         REFERENCES users(accountId)
         ON DELETE CASCADE
 );
+
 CREATE INDEX IX_Wagers_AccountId ON wagers(accountId);
+CREATE INDEX IX_Wagers_WagerId ON wagers(wagerId);
 
 CREATE TABLE userStats (
     accountId UNIQUEIDENTIFIER PRIMARY KEY,
@@ -41,6 +53,23 @@ CREATE INDEX IX_UserStats_WagerCount ON userStats(wagerCount);
 
 
 --Procedures
+
+CREATE PROCEDURE [dbo].[ValidateAccess]
+    @APIKey uniqueidentifier,
+    @Password varchar(30)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1 FROM dbo.access
+        WHERE APIKey = @APIKey
+          AND RTRIM(LTRIM(Password)) = RTRIM(LTRIM(@Password))
+    )
+        SELECT 1 AS IsValid;
+    ELSE
+        SELECT 0 AS IsValid;
+END
 
 CREATE PROCEDURE CreateUser
     @accountId UNIQUEIDENTIFIER = NULL,

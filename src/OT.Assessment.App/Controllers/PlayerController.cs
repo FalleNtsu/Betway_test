@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OT.Assessment.App.Models;
 using OT.Assessment.App.Models.Requests;
 using OT.Assessment.App.Models.Responses;
-using OT.Assessment.App.Services;
 using OT.Assessment.App.Repositories;
+using OT.Assessment.App.Services;
 
 namespace OT.Assessment.App.Controllers
 {
@@ -21,7 +22,9 @@ namespace OT.Assessment.App.Controllers
             _wagerRepository = wagerRepository; // Assuming WagerRepository is implemented and available
             _userStatsRepository=userStatsRepository;
         }
+
         //POST api/player/casinowager
+        //[Authorize]
         [HttpPost("CasinoWager")]
         public async Task<IActionResult> PostCasinoWagerAsync([FromBody] CasinoWager wagerEvent)
         {
@@ -34,6 +37,7 @@ namespace OT.Assessment.App.Controllers
         }
 
         //GET api/player/{playerId}/wagers
+        [Authorize]
         [HttpGet("{playerId:guid}/casino")]
         public async Task<IActionResult> GetCasinoWagers(Guid playerId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
@@ -54,7 +58,7 @@ namespace OT.Assessment.App.Controllers
         }
 
         //GET api/player/topSpenders?count=10        
-
+        [Authorize]
         [HttpGet("topSpenders")]
         public async Task<IActionResult> GetTopSpenders([FromQuery] int count = 10)
         {

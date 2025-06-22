@@ -13,6 +13,8 @@ namespace OT.Assessment.App.Repositories
             _connectionFactory = connectionFactory;
         }
 
+
+
         public async Task CreateUserIfNotExistsAsync(Guid accountId, string username)
         {
             using var connection = _connectionFactory.CreateConnection();
