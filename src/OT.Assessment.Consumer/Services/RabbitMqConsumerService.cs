@@ -41,8 +41,6 @@ namespace OT.Assessment.Consumer.Services
             {
                 try
                 {
-                    //_logger.LogInformation("Message received: {Message}", message);
-
                     var payload = JsonSerializer.Deserialize<WagerPayload>(message, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
@@ -64,21 +62,6 @@ namespace OT.Assessment.Consumer.Services
                     _logger.LogError(ex, "Error handling message");
                 }
             });
-
-
-
-
-
-
-
-            //// Your RabbitMQ consuming logic here:
-            //while (!stoppingToken.IsCancellationRequested)
-            //{
-            //    // Example: Poll or wait for messages
-            //    // await ConsumeMessagesAsync(stoppingToken);
-
-            //    await Task.Delay(1000, stoppingToken); // Simulate work
-            //}
 
             _logger.LogInformation("RabbitMQ Consumer stopped.");
         }

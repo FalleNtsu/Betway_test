@@ -18,7 +18,7 @@ CREATE TABLE users (
             )
 
 
-CREATE TABLE wagers (
+CREATE TABLE bets (
     id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     wagerId UNIQUEIDENTIFIER NOT NULL,
     game NVARCHAR(100) NOT NULL,
@@ -33,8 +33,8 @@ CREATE TABLE wagers (
         ON DELETE CASCADE
 );
 
-CREATE INDEX IX_Wagers_AccountId ON wagers(accountId);
-CREATE INDEX IX_Wagers_WagerId ON wagers(wagerId);
+CREATE INDEX IX_Wagers_AccountId ON bets(accountId);
+CREATE INDEX IX_Wagers_WagerId ON bets(wagerId);
 
 CREATE TABLE userStats (
     accountId UNIQUEIDENTIFIER PRIMARY KEY,
@@ -118,7 +118,7 @@ BEGIN
     IF @createdDate IS NULL
         SET @createdDate = SYSDATETIMEOFFSET();
 
-    INSERT INTO wagers (
+    INSERT INTO bets (
         wagerId,
         game,
         provider,
@@ -174,12 +174,12 @@ BEGIN
 
     -- Get total count
     SELECT COUNT(*) AS TotalCount
-    FROM wagers
+    FROM bets
     WHERE accountId = @AccountId;
 
     -- Get paginated records
     SELECT wagerId, game, provider, amount, createdDate
-    FROM wagers
+    FROM bets
     WHERE accountId = @AccountId
     ORDER BY createdDate DESC
     OFFSET @Offset ROWS

@@ -20,7 +20,10 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddSingleton(rabbitMqSettings);
 
         services.AddSingleton<IRabbitMqService>(sp =>
-            RabbitMqService.CreateInstanceAsync(rabbitMqSettings).GetAwaiter().GetResult());
+        {
+            var logger = sp.GetRequiredService<ILogger<RabbitMqService>>();
+            return RabbitMqService.CreateInstanceAsync(rabbitMqSettings, logger).GetAwaiter().GetResult();
+        });
         //Repositories
         services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
         services.AddScoped<IUserRepository, UserRepository>();

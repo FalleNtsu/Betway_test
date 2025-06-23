@@ -8,7 +8,9 @@ using OT.Assessment.App.Services;
 
 namespace OT.Assessment.App.Controllers
 {
-  
+    /// <summary>
+    /// Handles player-related actions such as submitting wagers and retrieving statistics.
+    /// </summary>
     [ApiController]
     [Route("api/Player")]
     public class PlayerController : ControllerBase
@@ -24,12 +26,17 @@ namespace OT.Assessment.App.Controllers
         }
 
         //POST api/player/casinowager
-        //[Authorize]
+        /// <summary>
+        /// Publishes a casino wager event to RabbitMQ.
+        /// </summary>
+        /// <param name="wagerEvent">The wager event payload.</param>
+        /// <returns>A confirmation of the publish action.</returns>
+        [Authorize]
         [HttpPost("CasinoWager")]
         public async Task<IActionResult> PostCasinoWagerAsync([FromBody] CasinoWager wagerEvent)
         {
-            if (wagerEvent == null)
-                return BadRequest("Invalid payload");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             await _rabbit.PublishAsync(wagerEvent);
 
@@ -37,6 +44,13 @@ namespace OT.Assessment.App.Controllers
         }
 
         //GET api/player/{playerId}/wagers
+        /// <summary>
+        /// Retrieves a paginated list of casino wagers for a specific player.
+        /// </summary>
+        /// <param name="playerId">The unique identifier of the player.</param>
+        /// <param name="page">The page number for pagination (default is 1).</param>
+        /// <param name="pageSize">The number of items per page (default is 10).</param>
+        /// <returns>A paginated response of casino wagers.</returns>
         [Authorize]
         [HttpGet("{playerId:guid}/casino")]
         public async Task<IActionResult> GetCasinoWagers(Guid playerId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
@@ -57,7 +71,12 @@ namespace OT.Assessment.App.Controllers
             return Ok(response);
         }
 
-        //GET api/player/topSpenders?count=10        
+        //GET api/player/topSpenders?count=10
+        ///// <summary>
+        /// Retrieves the top players based on total spending.
+        /// </summary>
+        /// <param name="count">The number of top spenders to return (default is 10).</param>
+        /// <returns>A list of top spenders.</returns>
         [Authorize]
         [HttpGet("topSpenders")]
         public async Task<IActionResult> GetTopSpenders([FromQuery] int count = 10)

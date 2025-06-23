@@ -4,5 +4,64 @@
         <name>OT.Assessment.App</name>
     </assembly>
     <members>
+        <member name="M:OT.Assessment.App.Controllers.AdminController.GetDeadLetterMessages(System.Int32)">
+            <summary>
+            Retrieves up to <paramref name="maxCount"/> messages from the Dead-Letter Queue (DLQ).
+            </summary>
+            <param name="maxCount">The maximum number of DLQ messages to retrieve. Default is 50.</param>
+            <returns>A list of <see cref="T:OT.Assessment.App.Models.Requests.CasinoWager"/> messages from the DLQ.</returns>
+            <response code="200">Returns a list of dead-lettered messages.</response>
+            <response code="401">Unauthorized. The caller is not authenticated.</response>
+        </member>
+        <member name="M:OT.Assessment.App.Controllers.AdminController.ReplayDeadLetterMessages(System.Int32)">
+            <summary>
+            Replays up to <paramref name="maxCount"/> messages from the Dead-Letter Queue by republishing them to the main queue.
+            </summary>
+            <param name="maxCount">The maximum number of DLQ messages to replay. Default is 50.</param>
+            <returns>A result indicating how many messages were replayed.</returns>
+            <response code="200">Returns the number of successfully replayed messages.</response>
+            <response code="401">Unauthorized. The caller is not authenticated.</response>
+        </member>
+        <member name="T:OT.Assessment.App.Controllers.AuthenticationController">
+            <summary>
+            Handles authentication operations for the API.
+            </summary>
+        </member>
+        <member name="M:OT.Assessment.App.Controllers.AuthenticationController.Login(OT.Assessment.App.Models.Requests.AuthRequest)">
+            <summary>
+            Authenticates a user and returns a JWT token.
+            </summary>
+            <param name="request">The login request with username and password.</param>
+            <returns>A JWT token if successful.</returns>
+        </member>
+        <member name="M:OT.Assessment.App.Controllers.AuthenticationController.GenerateJwtToken(System.String)">
+            <summary>
+            Generates a JWT token using the provided username.
+            </summary>
+            <param name="username">The username to include in the token's claims.</param>
+            <returns>A signed JWT token string.</returns>
+        </member>
+        <member name="T:OT.Assessment.App.Controllers.PlayerController">
+            <summary>
+            Handles player-related actions such as submitting wagers and retrieving statistics.
+            </summary>
+        </member>
+        <member name="M:OT.Assessment.App.Controllers.PlayerController.PostCasinoWagerAsync(OT.Assessment.App.Models.Requests.CasinoWager)">
+            <summary>
+            Publishes a casino wager event to RabbitMQ.
+            </summary>
+            <param name="wagerEvent">The wager event payload.</param>
+            <returns>A confirmation of the publish action.</returns>
+        </member>
+        <member name="M:OT.Assessment.App.Controllers.PlayerController.GetCasinoWagers(System.Guid,System.Int32,System.Int32)">
+            <summary>
+            Retrieves a paginated list of casino wagers for a specific player.
+            </summary>
+            <param name="playerId">The unique identifier of the player.</param>
+            <param name="page">The page number for pagination (default is 1).</param>
+            <param name="pageSize">The number of items per page (default is 10).</param>
+            <returns>A paginated response of casino wagers.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:OT.Assessment.App.Controllers.PlayerController.GetTopSpenders(System.Int32)" -->
     </members>
 </doc>

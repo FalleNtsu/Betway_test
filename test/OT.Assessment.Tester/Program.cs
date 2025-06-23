@@ -49,3 +49,5 @@ NBomberRunner
     .WithWorkerPlugins(new HttpMetricsPlugin(new[] { HttpVersion.Version1 }))
     .WithoutReports()
     .Run();
+Console.WriteLine("Press Enter to exit...");
+Console.ReadLine();

@@ -9,6 +9,9 @@ using System.Text;
 
 namespace OT.Assessment.App.Controllers
 {
+    /// <summary>
+    /// Handles authentication operations for the API.
+    /// </summary>
     [ApiController]
     [Route("api/Auth")]
     public class AuthenticationController : ControllerBase
@@ -21,6 +24,11 @@ namespace OT.Assessment.App.Controllers
             _authRepository = authRepository;
         }
 
+        /// <summary>
+        /// Authenticates a user and returns a JWT token.
+        /// </summary>
+        /// <param name="request">The login request with username and password.</param>
+        /// <returns>A JWT token if successful.</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] AuthRequest request)
         {
@@ -33,6 +41,11 @@ namespace OT.Assessment.App.Controllers
             return Ok(new { token });
         }
 
+        /// <summary>
+        /// Generates a JWT token using the provided username.
+        /// </summary>
+        /// <param name="username">The username to include in the token's claims.</param>
+        /// <returns>A signed JWT token string.</returns>
         private string GenerateJwtToken(string username)
         {
             var jwtConfig = _configuration.GetSection("Jwt");

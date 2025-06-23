@@ -76,7 +76,8 @@ builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("R
 builder.Services.AddSingleton<IRabbitMqService>(sp =>
 {
     var settings = sp.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
-    var rabbit = RabbitMqService.CreateInstanceAsync(settings).GetAwaiter().GetResult();
+    var logger = sp.GetRequiredService<ILogger<RabbitMqService>>();
+    var rabbit = RabbitMqService.CreateInstanceAsync(settings, logger).GetAwaiter().GetResult();
     return rabbit;
 });
 
